@@ -1,0 +1,35 @@
+.MobileNav {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+}
+
+.MobileNavMenuBtn {
+    width: 42px;
+    height: 42px;
+    margin-top: 5px;
+    margin-right: 5px;
+    text-align: center;
+    border: 1px solid #000000;
+    border-radius: 3px;
+}
+
+.MobileNavMenuBtn span {
+    font-size: 38px;
+}
+
+.MobileNavMenuOpen {
+    -webkit-animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.MobileNavMenuClosedSlideOut {
+    -webkit-animation: slide-out-right 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+    animation: slide-out-right 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+}
+
+.MobileNavMenuItem {
+    height: 38px;
+    width: 200px;
+    border: 1px solid #000000;
+}

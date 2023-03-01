@@ -1,26 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Component } from "react"
+import DesktopNav from "./components/nav/desktop_nav/DesktopNav"
+import MobileNav from "./components/nav/mobile_nav/MobileNav"
+import About from "./sections/about/About"
+import Contact from "./sections/contact/Contact"
+import mutator from "./utils/mutator"
+import "./app.css"
+import "./animate.css"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface AppState {
+  activeSection: number
 }
 
-export default App;
+class App extends Component<{}, AppState> {
+
+  state = {
+    activeSection: 1,
+    menuOpen: false
+  }
+
+  manageState = (keys: Array<{ key: string, value?: any }>) => {
+    this.setState(mutator(this.state, keys))
+  }
+
+  render() {
+
+    const state = this.state
+
+    return (
+      <div className="App">
+        <MobileNav
+          manageParentState={this.manageState}
+          menuOpen={state.menuOpen}
+          activeSection={state.activeSection}
+        />
+        {/* <DesktopNav
+          manageParentState={this.manageState}
+        /> */}
+        {state.activeSection === 1 &&
+          <About manageParentState={this.manageState}
+          />}
+        {state.activeSection === 3 &&
+          <Contact manageParentState={this.manageState}
+          />}
+      </div>
+    )
+  }
+}
+
+export default App
