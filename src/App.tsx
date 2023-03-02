@@ -1,21 +1,37 @@
 import { Component } from "react"
-import DesktopNav from "./components/nav/desktop_nav/DesktopNav"
+import { connect } from "react-redux"
+import { setTheme } from "./redux/slices/ThemeSlice"
+import { io } from "./utils/socket"
 import MobileNav from "./components/nav/mobile_nav/MobileNav"
 import About from "./sections/about/About"
 import Contact from "./sections/contact/Contact"
 import mutator from "./utils/mutator"
+import ThemeTypes from "./types/ThemeTypes"
 import "./app.css"
 import "./animate.css"
+interface Props {
+  theme: ThemeTypes
+}
 
-interface AppState {
+interface State {
   activeSection: number
 }
 
-class App extends Component<{}, AppState> {
+class App extends Component<Props, State> {
 
   state = {
     activeSection: 1,
     menuOpen: false
+  }
+
+  componentDidMount(): void {
+    //@ts-ignore
+    //!!When you don't pass mapDispatchToProps, the connect function makes dispatch available as prop to the component
+    const { dispatch } = this.props;
+    io.emit("send-current-theme")
+    io.on("receive-current-theme", (theme: ThemeTypes) => {
+      dispatch(setTheme(theme))
+    })
   }
 
   manageState = (keys: Array<{ key: string, value?: any }>) => {
@@ -25,9 +41,14 @@ class App extends Component<{}, AppState> {
   render() {
 
     const state = this.state
+    const props = this.props
+    const theme = props.theme
+
+    // console.log("App state", state)
+    console.log("App props", props)
 
     return (
-      <div className="App">
+      <div className="App" style={{ backgroundColor: theme ? theme.c1 : "unset" }}>
         <MobileNav
           manageParentState={this.manageState}
           menuOpen={state.menuOpen}
@@ -37,14 +58,18 @@ class App extends Component<{}, AppState> {
           manageParentState={this.manageState}
         /> */}
         {state.activeSection === 1 &&
-          <About manageParentState={this.manageState}
-          />}
+          // <About manageParentState={this.manageState}
+          <About />}
         {state.activeSection === 3 &&
-          <Contact manageParentState={this.manageState}
-          />}
+          // <Contact manageParentState={this.manageState}
+          <Contact />}
       </div>
     )
   }
 }
 
-export default App
+const mapStateToProps = (state: { themeSlice: { theme: ThemeTypes } }) => ({
+  theme: state.themeSlice.theme
+})
+
+export default connect(mapStateToProps)(App)

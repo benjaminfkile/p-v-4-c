@@ -1,48 +1,31 @@
-import { Component } from "react"
-import { socket } from "../../context/socket"
-import mutator from "../../utils/mutator"
-import AboutTypes from "./AboutTypes"
-
-
-interface Props {
-    manageParentState: Function
+import { FunctionComponent, useEffect, useState } from "react"
+import AboutTypes from "../../types/AboutTypes"
+import { io } from "../../utils/socket"
+import "./About.css"
+interface AboutProps {
+    // manageParentState: Function
 }
 
-interface AboutState {
-    about: AboutTypes[]
-}
+const About: FunctionComponent<AboutProps> = () => {
 
-class About extends Component<Props, AboutState> {
+    const [about, setAbout] = useState<AboutTypes[] | null>(null)
 
-    state = {
-        about: []
-    }
-
-    manageState = (keys: Array<{ key: string, value?: any }>) => {
-        this.setState(mutator(this.state, keys))
-    }
-
-
-    componentDidMount(): void {
-        socket.emit("send-about-JSON")
-        socket.on("recieve-about-JSON", (about: AboutTypes[]) => {
-            console.log(about)
-            this.manageState([{ key: "about", value: about }])
+    useEffect(() => {
+        io.emit("send-about")
+        io.on("receive-about", (about: AboutTypes[]) => {
+            setAbout(about)
         })
-    }
+    }, [])
 
-    render() {
-
-        const state = this.state
-
-        console.log("About state", state)
-
-        return (
-            <div className="About">
-
-            </div>
-        )
-    }
+    return (
+        <div className="About">
+            {about && about.map((aboutItem, i) =>
+                <div key={i}>
+                    {aboutItem.paragraph}
+                </div>
+            )}
+        </div>
+    )
 }
 
 export default About

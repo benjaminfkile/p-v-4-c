@@ -2,7 +2,7 @@ import { FunctionComponent } from "react"
 import "./Contact.css"
 
 interface Props {
-    manageParentState: Function
+    // manageParentState: Function
 }
 
 const Contact: FunctionComponent<Props> = () => {
