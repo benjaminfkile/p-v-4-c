@@ -32,6 +32,10 @@ class App extends Component<Props, State> {
     io.on("receive-current-theme", (theme: ThemeTypes) => {
       dispatch(setTheme(theme))
     })
+    io.on("update-current-theme", (theme: ThemeTypes) => {
+      dispatch(setTheme(theme))
+      console.log("the admin updated the theme")
+    })
   }
 
   manageState = (keys: Array<{ key: string, value?: any }>) => {
